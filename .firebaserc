@@ -1,7 +1,7 @@
 {
   "projects": {
     "default": "id-do-seu-projeto-production",
-    "testing": "id-do-seu-projeto-testing",
+    "testing": "testingfinal-5a606",
     "staging": "id-do-seu-projeto-staging",
     "production": "id-do-seu-projeto-production"
   }
