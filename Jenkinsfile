@@ -39,8 +39,6 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                echo 'Ready to deploy to Production...'
-                input message: 'Deploy to Production?', ok: 'Deploy'
                 echo 'Deploying to Production environment...'
                 sh 'firebase use production --token "$FIREBASE_TOKEN"'
                 sh 'firebase deploy --only hosting --token "$FIREBASE_TOKEN"'
@@ -54,8 +52,8 @@ pipeline {
             echo '🎉 Pipeline completed successfully!'
             echo 'All environments deployed:'
             echo '• Testing: https://testingfinal-5a606.web.app'
-            echo '• Staging: https://staging-project.web.app'
-            echo '• Production: https://production-project.web.app'
+            echo '• Staging: https://stagingfinal-cb7de.web.app'
+            echo '• Production: [URL will show after deploy]'
         }
         failure {
             echo '❌ Pipeline failed!'
