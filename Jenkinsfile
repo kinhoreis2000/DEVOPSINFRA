@@ -5,58 +5,63 @@ pipeline {
         githubPush()
     }
 
-    // ADICIONE ESTA SEÇÃO:
-    options {
-        // Manter apenas os últimos 10 builds
-        buildDiscarder(logRotator(numToKeepStr: '10'))
-        
-        // Timeout do pipeline
-        timeout(time: 30, unit: 'MINUTES')
-    }
-
     environment {
-        FIREBASE_TOKEN = credentials('FIREBASE_TOKEN') 
+        FIREBASE_TOKEN = credentials('FIREBASE_TOKEN')
     }
 
     stages {
-        // ADICIONE ESTE STAGE PARA DEBUG:
-        stage('Debug Info') {
+        stage('Build - Install Firebase Tools') {
             steps {
-                script {
-                    echo "Branch atual: ${env.BRANCH_NAME}"
-                    echo "Git commit: ${env.GIT_COMMIT}"
-                    sh 'git branch -a'
-                    sh 'pwd && ls -la'
-                }
-            }
-        }
-
-        stage('Install Firebase CLI') {
-            steps {
+                echo 'Installing Firebase CLI...'
                 sh 'npm install -g firebase-tools'
+                sh 'firebase --version'
+                echo 'Firebase CLI installed successfully!'
             }
         }
 
         stage('Deploy to Testing') {
             steps {
+                echo 'Deploying to Testing environment...'
                 sh 'firebase use testing --token "$FIREBASE_TOKEN"'
                 sh 'firebase deploy --only hosting --token "$FIREBASE_TOKEN"'
+                echo 'Testing deployment completed!'
             }
         }
 
         stage('Deploy to Staging') {
             steps {
+                echo 'Deploying to Staging environment...'
                 sh 'firebase use staging --token "$FIREBASE_TOKEN"'
                 sh 'firebase deploy --only hosting --token "$FIREBASE_TOKEN"'
+                echo 'Staging deployment completed!'
             }
         }
 
         stage('Deploy to Production') {
             steps {
-                input "Deploy to production?"
+                echo 'Ready to deploy to Production...'
+                input message: 'Deploy to Production?', ok: 'Deploy'
+                echo 'Deploying to Production environment...'
                 sh 'firebase use production --token "$FIREBASE_TOKEN"'
                 sh 'firebase deploy --only hosting --token "$FIREBASE_TOKEN"'
+                echo 'Production deployment completed!'
             }
+        }
+    }
+
+    post {
+        success {
+            echo '🎉 Pipeline completed successfully!'
+            echo 'All environments deployed:'
+            echo '• Testing: https://testingfinal-5a606.web.app'
+            echo '• Staging: https://staging-project.web.app'
+            echo '• Production: https://production-project.web.app'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+        always {
+            echo 'Pipeline execution finished.'
         }
     }
 }
