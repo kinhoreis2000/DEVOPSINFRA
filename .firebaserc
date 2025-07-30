@@ -2,7 +2,7 @@
   "projects": {
     "default": "id-do-seu-projeto-production",
     "testing": "testingfinal-5a606",
-    "staging": "id-do-seu-projeto-staging",
-    "production": "id-do-seu-projeto-production"
+    "staging": "stagingfinal-cb7de",
+    "production": "productionfinal-5d636"
   }
 }
