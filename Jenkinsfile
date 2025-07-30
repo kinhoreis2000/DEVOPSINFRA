@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     environment {
         FIREBASE_TOKEN = credentials('FIREBASE_TOKEN') 
     }
@@ -28,7 +32,7 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                input "Deploy to production?" // espera confirmação manual
+                input "Deploy to production?"
                 sh 'firebase use production --token "$FIREBASE_TOKEN"'
                 sh 'firebase deploy --only hosting --token "$FIREBASE_TOKEN"'
             }
